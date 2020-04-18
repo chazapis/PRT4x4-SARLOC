@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $alert_type = "danger";
       $alert = "WRONG PASSCODE";
     } else {
-      $mysqli->query("DELETE FROM data WHERE id=1");
+      $mysqli->query("DELETE FROM data");
     }
   }
 }
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
   </head>
-  <body class="bg-light">
+  <body>
     <div class="container-fluid py-2">
       <div class="row">
         <div class="col-12 mb-4">
@@ -110,7 +110,7 @@ mysqli_close($mysqli);
             <div class="modal-body">
               <div class="form-group">
                 <label for="passcode">PASSCODE:</label>
-                <input type="text" class="form-control" name="passcode">
+                <input type="password" class="form-control" name="passcode">
               </div>
             </div>
             <div class="modal-footer">
