@@ -1,16 +1,25 @@
 <!doctype html>
 <?php
 
-ini_set('display_errors', 'On');
+ini_set("display_errors", "On");
 error_reporting(E_ALL);
 
-$username = "root";
-$password = "root";
-$database = "sarloc";
+include("config.php");
 $mysqli = new mysqli("localhost", $username, $password, $database);
 
 if ($mysqli === false){
   die("ERROR: Could not connect. " . $mysqli->connect_error);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if ($_POST["op"] == "delete") {
+    if ($_POST["passcode"] != $passcode) {
+      $alert_type = "danger";
+      $alert = "WRONG PASSCODE";
+    } else {
+      $mysqli->query("DELETE FROM data WHERE id=1");
+    }
+  }
 }
 
 ?>
@@ -19,64 +28,98 @@ if ($mysqli === false){
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="Antony Chazapis">
+    <meta name="author" content="Panos Bogris, Antony Chazapis">
     <link rel="icon" href="data:,">
 
-    <title>ΠΑΝΕΛΛΑΔΙΚΗ ΟΜΑΔΑ ΒΟΗΘΕΙΑΣ 4Χ4 SARLOC</title>
+    <title>PANHELLENIC 4X4 RESCUE TEAM 4Χ4 SARLOC</title>
 
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body class="bg-light">
-    <div class="container">
-      <div class="py-5 text-center">
-        <img class="d-block mx-auto mb-4" src="images/logo-omada.gif" alt="" width="138" height="119">
-        <h2>Κλήσεις SAR</h2>
-        <p class="lead">Στείλτε με μήνυμα τη διεύθυνση <span id="link-text">https://sota.gr/sarloc/locate.php</span>. <button id="copy-link-text" type="button" class="btn btn-dark btn-sm">Αντιγραφή</button><br>Η σελίδα αυτή θα εντοπίσει τη θέση του παραλήπτη και θα εμφανίσει τα στοιχεία εδώ.</p>
-      </div>
+    <div class="container-fluid py-2">
       <div class="row">
         <div class="col-12 mb-4">
 <?php
 
-$result = $mysqli->query("select * from location order by timestamp");
+if (isset($alert)) {
+  echo '<div class="alert alert-'.$alert_type.' alert-dismissible fade show" role="alert">
+          '.$alert.'
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>';
+}
+
+$result = $mysqli->query("SELECT * FROM data ORDER BY timestamp");
 if ($result) {
   if ($result->num_rows == 0) {
-    echo '<h4 class="text-center">Δεν υπάρχουν κλήσεις.</h4>';
+    echo '<h4 class="text-center">NO ENTRIES</h4>';
   } else {
-    echo '<table class="table table-striped">
+    echo '<table class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Ώρα (UTC)</th>
-                <th scope="col">Γεωγρ. Πλάτος</th>
-                <th scope="col">Γεωγρ. Μήκος</th>
-                <th scope="col">Σημειώσεις</th>
-                <th scope="col"></th>
+                <th scope="col">ID</th>
+                <th scope="col">DATE</th>
+                <th scope="col">TIME</th>
+                <th scope="col">LAT</th>
+                <th scope="col">LONG</th>
+                <th scope="col">LINK</th>
+                <th scope="col">NOTES</th>
               </tr>
             </thead>
             <tbody>';
     while ($row = $result->fetch_assoc()) {
       echo '<tr>
-              <th scope="row">'.$row["id"].'</th>
-              <td>'.$row["timestamp"].'</td>
-              <td>'.$row["latitude"].'</td>
-              <td>'.$row["longitude"].'</td>
+              <th scope="row">'.$row["args"].'</th>
+              <td>'.date("d/n/y", strtotime($row["timestamp"])).'</td>
+              <td>'.date("H:i:s", strtotime($row["timestamp"])).'</td>
+              <td>'.($row["latitude"] != 0 ? $row["latitude"] : '').'</td>
+              <td>'.($row["longitude"] != 0 ? $row["longitude"] : '').'</td>
+              <td>'.(($row["latitude"] != 0 && $row["longitude"] != 0) ? '<a class="text-secondary" href="https://www.google.com/maps/search/?api=1&query='.$row["latitude"].','.$row["longitude"].'" target="_blank">MAP</a>' : '').'</td>
               <td>'.$row["notes"].'</td>
-              <td><a class="text-secondary" href="https://www.google.com/maps/search/?api=1&query='.$row["latitude"].','.$row["longitude"].'" target="_blank">Χάρτης</a></td>
             </tr>';
     }
     echo '</tbody>
         </table>
-        <button id="delete-all" type="button" class="btn btn-dark btn-sm">Διαγραφή όλων</button>';
+        <button id="delete-all" type="button" class="btn btn-dark btn-md" data-toggle="modal" data-target="#deleteModal">DELETE ALL</button>';
   }
 }
+
+mysqli_close($mysqli);
 
 ?>
         </div>
       </div>
-      <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">ΠΑΝΕΛΛΑΔΙΚΗ ΟΜΑΔΑ ΒΟΗΘΕΙΑΣ 4Χ4 SARLOC<br>Βασισμένο σε <a class="text-secondary" href="https://sarloc.russ-hore.co.uk/" target="_blank">μια ιδέα του Russell Hore</a> - <a class="text-secondary" href="https://github.com/chazapis/sarloc" target="_blank">Κώδικας σελίδας</a></p>
+      <footer class="text-muted text-center text-small">
+        <p class="mb-1">LINK: <span id="link-text">https://sota.gr/sarloc/locate.php?id=...</span> <button id="copy-link-text" type="button" class="btn btn-dark btn-sm">Αντιγραφή</button></p>
+        <p class="mb-1 py-2">PANHELLENIC 4X4 RESCUE TEAM SARLOC<br>Based on <a class="text-secondary" href="https://sarloc.russ-hore.co.uk/" target="_blank">an idea by Russell Hore</a> - <a class="text-secondary" href="https://github.com/chazapis/PRT4x4-SARLOC" target="_blank">Source</a></p>
       </footer>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">DELETE</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form method="post">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="passcode">PASSCODE:</label>
+                <input type="text" class="form-control" name="passcode">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+              <button type="submit" class="btn btn-primary btn-dark" name="op" value="delete">DELETE</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <!-- jQuery first, then Bootstrap JS with Popper.js -->
@@ -84,19 +127,18 @@ if ($result) {
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script>
 $(function (){
-    $("#copy-link-text").click(function () {
-        var $temp = $("<input>");
-        $("body").append($temp);
-        $temp.val($("#link-text").text()).select();
-        document.execCommand("copy");
-        $temp.remove();
-    });
+  $("#copy-link-text").click(function () {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($("#link-text").text()).select();
+    document.execCommand("copy");
+    $temp.remove();
+  });
 
-    $("#delete-all").click(function () {
-        console.log("DELETE ALL");
-    });
+  $("#delete-all").click(function () {
+    console.log("DELETE ALL");
+  });
 });
     </script>
   </body>
 </html>
-
