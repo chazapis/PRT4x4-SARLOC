@@ -7,7 +7,7 @@
     <title>ΠΟΒ4Χ4 SARLOC</title>
   </head>
   <body onload="getLocation()">
-    <p id="location-text">ΑΝΑΖΗΤΗΣΗ ΣΥΝΤΕΤΑΓΜΕΝΩΝ...</p>
+    <h2 id="location-text">ΑΝΑΖΗΤΗΣΗ ΣΥΝΤΕΤΑΓΜΕΝΩΝ...</h2>
     <script>
 var x = document.getElementById("location-text");
 <?php

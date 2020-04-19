@@ -1,4 +1,3 @@
-<!doctype html>
 <?php
 
 ini_set("display_errors", "On");
@@ -20,11 +19,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $alert = "WRONG PASSCODE";
     } else {
       $mysqli->query("DELETE FROM data");
+      header("Location: view.php");
+      exit();
     }
   }
 }
 
 ?>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -33,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="author" content="Panos Bogris, Antony Chazapis">
     <link rel="icon" href="data:,">
 
-    <title>PANHELLENIC 4X4 RESCUE TEAM 4Χ4 SARLOC</title>
+    <title>PANHELLENIC 4X4 RESCUE TEAM SARLOC</title>
 
     <!-- Bootstrap CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -94,7 +96,7 @@ mysqli_close($mysqli);
         </div>
       </div>
       <footer class="text-muted text-center text-small">
-        <p class="mb-1">LINK: <span id="link-text">https://sota.gr/sarloc/locate.php?id=...</span> <button id="copy-link-text" type="button" class="btn btn-dark btn-sm">Αντιγραφή</button></p>
+        <p class="mb-1">LINK: <span id="link-text">https://sota.gr/sarloc/locate.php</span> <button id="copy-link-text" type="button" class="btn btn-dark btn-sm">Αντιγραφή</button></p>
         <p class="mb-1 py-2">PANHELLENIC 4X4 RESCUE TEAM SARLOC<br>Based on <a class="text-secondary" href="https://sarloc.russ-hore.co.uk/" target="_blank">an idea by Russell Hore</a> - <a class="text-secondary" href="https://github.com/chazapis/PRT4x4-SARLOC" target="_blank">Source</a></p>
       </footer>
     </div>
