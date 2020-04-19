@@ -4,6 +4,8 @@
 ini_set("display_errors", "On");
 error_reporting(E_ALL);
 
+date_default_timezone_set('Europe/Athens');
+
 include("config.php");
 $mysqli = new mysqli("localhost", $username, $password, $database);
 
@@ -51,7 +53,7 @@ if (isset($alert)) {
         </div>';
 }
 
-$result = $mysqli->query("SELECT * FROM data ORDER BY timestamp");
+$result = $mysqli->query("SELECT args, UNIX_TIMESTAMP(timestamp) as tstamp, latitude, longitude, notes FROM data ORDER BY timestamp DESC");
 if ($result) {
   if ($result->num_rows == 0) {
     echo '<h4 class="text-center">NO ENTRIES</h4>';
@@ -72,8 +74,8 @@ if ($result) {
     while ($row = $result->fetch_assoc()) {
       echo '<tr>
               <th scope="row">'.$row["args"].'</th>
-              <td>'.date("d/n/y", strtotime($row["timestamp"])).'</td>
-              <td>'.date("H:i:s", strtotime($row["timestamp"])).'</td>
+              <td>'.date("d/n/y", $row["tstamp"]).'</td>
+              <td>'.date("H:i:s", $row["tstamp"]).'</td>
               <td>'.($row["latitude"] != 0 ? $row["latitude"] : '').'</td>
               <td>'.($row["longitude"] != 0 ? $row["longitude"] : '').'</td>
               <td>'.(($row["latitude"] != 0 && $row["longitude"] != 0) ? '<a class="text-secondary" href="https://www.google.com/maps/search/?api=1&query='.$row["latitude"].','.$row["longitude"].'" target="_blank">MAP</a>' : '').'</td>
