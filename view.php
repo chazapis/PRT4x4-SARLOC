@@ -55,7 +55,15 @@ if (isset($alert)) {
         </div>';
 }
 
-$result = $mysqli->query("SELECT args, UNIX_TIMESTAMP(timestamp) as tstamp, latitude, longitude, notes FROM data ORDER BY timestamp DESC LIMIT 100");
+$result = $mysqli->query("SELECT COUNT(*) AS total FROM data");
+if ($result) {
+  $row = $result->fetch_assoc();
+  $total = $row["total"];
+} else {
+  $total = "-";
+}
+
+$result = $mysqli->query("SELECT args, UNIX_TIMESTAMP(timestamp) AS tstamp, latitude, longitude, notes FROM data ORDER BY timestamp DESC LIMIT 100");
 if ($result) {
   if ($result->num_rows == 0) {
     echo '<h4 class="text-center">NO ENTRIES</h4>';
@@ -86,7 +94,7 @@ if ($result) {
     }
     echo '</tbody>
         </table>
-        <button id="delete-all" type="button" class="btn btn-dark btn-md" data-toggle="modal" data-target="#deleteModal">DELETE ALL</button>';
+        <button id="delete-all" type="button" class="btn btn-dark btn-md" data-toggle="modal" data-target="#deleteModal">DELETE ALL ('.$total.')</button>';
   }
 }
 
