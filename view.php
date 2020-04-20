@@ -75,13 +75,13 @@ if ($result) {
             <tbody>';
     while ($row = $result->fetch_assoc()) {
       echo '<tr>
-              <th scope="row">'.$row["args"].'</th>
+              <th scope="row">'.strip_tags($row["args"]).'</th>
               <td>'.date("d/n/y", $row["tstamp"]).'</td>
               <td>'.date("H:i:s", $row["tstamp"]).'</td>
               <td>'.($row["latitude"] != 0 ? $row["latitude"] : '').'</td>
               <td>'.($row["longitude"] != 0 ? $row["longitude"] : '').'</td>
               <td>'.(($row["latitude"] != 0 && $row["longitude"] != 0) ? '<a class="text-secondary" href="https://www.google.com/maps/search/?api=1&query='.$row["latitude"].','.$row["longitude"].'" target="_blank">MAP</a>' : '').'</td>
-              <td>'.$row["notes"].'</td>
+              <td>'.strip_tags($row["notes"]).'</td>
             </tr>';
     }
     echo '</tbody>
