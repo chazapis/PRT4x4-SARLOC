@@ -96,7 +96,7 @@ mysqli_close($mysqli);
         </div>
       </div>
       <footer class="text-muted text-center text-small">
-        <p class="mb-1">LINK: <span id="link-text">https://sota.gr/sarloc/locate.php</span> <button id="copy-link-text" type="button" class="btn btn-dark btn-sm">Αντιγραφή</button></p>
+        <p class="mb-1">LINK: <span id="link-text">https://sota.gr/sarloc/locate.php</span> <button id="copy-link-text" type="button" class="btn btn-dark btn-sm">COPY</button></p>
         <p class="mb-1 py-2">PANHELLENIC 4X4 RESCUE TEAM SARLOC<br>Based on <a class="text-secondary" href="https://sarloc.russ-hore.co.uk/" target="_blank">an idea by Russell Hore</a> - <a class="text-secondary" href="https://github.com/chazapis/PRT4x4-SARLOC" target="_blank">Source</a></p>
       </footer>
     </div>

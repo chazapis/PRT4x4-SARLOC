@@ -9,10 +9,13 @@ if ($_SERVER["CONTENT_TYPE"] == "application/json") {
     $data = $_REQUEST;
 }
 
-$args = isset($data["args"]) ? substr($data["args"], 0, 5) : "";
+$args = isset($data["args"]) ? $data["args"] : "";
 $latitude = isset($data["latitude"]) ? $data["latitude"] : 0;
 $longitude = isset($data["longitude"]) ? $data["longitude"] : 0;
-$notes = isset($data["notes"]) ? substr($data["notes"], 0, 64) : "";
+$notes = isset($data["notes"]) ? $data["notes"] : "";
+
+$args = iconv_substr($args, 0, 5);
+$notes = iconv_substr($notes, 0, 64);
 
 $args = $mysqli->real_escape_string($args);
 $latitude = $mysqli->real_escape_string($latitude);
