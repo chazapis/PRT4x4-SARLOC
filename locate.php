@@ -5,6 +5,11 @@
     <meta name="author" content="Panos Bogris, Antony Chazapis">
     <link rel="icon" href="data:,">
     <title>ΠΟΒ4Χ4 SARLOC</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+    </style>
   </head>
   <body onload="getLocation()">
     <h2 id="location-text">ΑΝΑΖΗΤΗΣΗ ΣΥΝΤΕΤΑΓΜΕΝΩΝ...</h2>
