@@ -45,7 +45,7 @@ function showPosition(position) {
 }
 
 function showError(error) {
-  switch(error.code) {
+  switch (error.code) {
     case error.PERMISSION_DENIED:
       x.innerHTML = "ΔΕΝ ΕΠΙΤΡΕΠΕΤΑΙ Η ΠΡΟΣΒΑΣΗ ΣΤΗΝ ΤΟΠΟΘΕΣΙΑ"
       break;
@@ -55,7 +55,8 @@ function showError(error) {
     case error.TIMEOUT:
       x.innerHTML = "ΠΕΡΑΣΕ Ο ΜΕΓΙΣΤΟΣ ΧΡΟΝΟΣ ΑΝΑΜΟΝΗΣ"
       break;
-    case error.UNKNOWN_ERROR:
+    // case error.UNKNOWN_ERROR:
+    default:
       x.innerHTML = "ΑΓΝΩΣΤΟ ΣΦΑΛΜΑ"
       break;
   }
