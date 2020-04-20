@@ -55,7 +55,7 @@ if (isset($alert)) {
         </div>';
 }
 
-$result = $mysqli->query("SELECT args, UNIX_TIMESTAMP(timestamp) as tstamp, latitude, longitude, notes FROM data ORDER BY timestamp DESC");
+$result = $mysqli->query("SELECT args, UNIX_TIMESTAMP(timestamp) as tstamp, latitude, longitude, notes FROM data ORDER BY timestamp DESC LIMIT 100");
 if ($result) {
   if ($result->num_rows == 0) {
     echo '<h4 class="text-center">NO ENTRIES</h4>';
