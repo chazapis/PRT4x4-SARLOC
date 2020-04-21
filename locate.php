@@ -19,6 +19,7 @@ var x = document.getElementById("location-text");
 var h = document.getElementById("help-text");
 <?php
   $args = isset($_GET["id"]) ? $_GET["id"] : $_SERVER['QUERY_STRING'];
+  $args = urldecode($args);
   $args = iconv_substr($args, 0, 5);
   echo 'var args = "'.addslashes($args).'";';
 ?>
